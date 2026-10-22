@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Kehadiran OSMIAS</title>
+<style>
+:root{--blue:#1769d2;--blue2:#0d4da8;--pale:#eaf3ff;--ink:#183153;--muted:#71819a;--line:#e2eaf5;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f4f8ff;color:var(--ink)}
+header{background:linear-gradient(125deg,#0d4da8,#2788f5);color:#fff;padding:28px 22px 64px}
+.top{max-width:1180px;margin:auto;display:flex;align-items:center;gap:15px}.logo{width:54px;height:54px;border-radius:16px;background:#fff;color:var(--blue);display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:0 8px 20px #073b8050}.brand h1{font-size:clamp(22px,3vw,32px);margin:0 0 6px}.brand p{margin:0;color:#dceaff;font-size:14px}
+main{max-width:1180px;margin:-38px auto 40px;padding:0 18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.stat,.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px #1b4d8510}.stat{padding:18px 20px}.stat span{font-size:13px;color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:7px;color:var(--blue)}
+.panel{padding:22px;margin-bottom:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.panel h2{font-size:18px;margin:0}.sub{font-size:13px;color:var(--muted);margin-top:5px}
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}label{font-size:13px;font-weight:700;color:#334c6d}input,select{width:100%;padding:12px 13px;border:1px solid #d6e2f2;border-radius:10px;font:inherit;color:var(--ink);background:#fff;outline:none}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1769d21b}.actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+button{border:0;border-radius:10px;padding:11px 16px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}button:hover{transform:translateY(-1px)}.primary{background:var(--blue);color:#fff}.primary:hover{background:var(--blue2)}.secondary{background:#edf4ff;color:var(--blue)}.danger{background:#fff0f0;color:#c23c3c}.small{padding:7px 10px;font-size:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.toolbar input{max-width:330px}.toolbar select{max-width:210px}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:780px}th{text-align:left;font-size:12px;color:#627590;background:#f5f8fd;padding:13px 12px;white-space:nowrap}td{padding:14px 12px;border-bottom:1px solid #edf1f7;font-size:13px}tbody tr:hover{background:#f9fbff}.pill{display:inline-block;border-radius:999px;background:#eaf3ff;color:#145ab6;padding:5px 9px;font-size:11px;font-weight:800}.empty{text-align:center;color:var(--muted);padding:32px 12px}.row-actions{display:flex;gap:6px}.footer{text-align:center;color:#8a9ab1;font-size:12px;padding:6px 0 24px}
+@media(max-width:650px){header{padding:23px 16px 58px}.stats{gap:8px}.stat{padding:14px 12px}.stat strong{font-size:23px}.stat span{font-size:11px}.panel{padding:16px}form{grid-template-columns:1fr}.field.full,.actions{grid-column:auto}.panel-head{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="logo">OS</div><div class="brand"><h1>Data Kehadiran OSMIAS</h1><p>Sistem pencatatan kehadiran santri · Praktis, rapi, dan mudah digunakan</p></div></div></header>
+<main>
+<section class="stats">
+ <div class="stat"><span>Total kehadiran</span><strong id="total">0</strong></div>
+ <div class="stat"><span>Bidang terdaftar</span><strong id="fieldsCount">10</strong></div>
+ <div class="stat"><span>Data hari ini</span><strong id="todayCount">0</strong></div>
+</section>
+<section class="panel">
+ <div class="panel-head"><div><h2 id="formTitle">＋ Tambah Kehadiran</h2><div class="sub">Isi data dengan benar sebelum menyimpan.</div></div></div>
+ <form id="attendanceForm">
+  <div class="field"><label for="nama">Nama lengkap</label><input id="nama" name="nama" placeholder="Masukkan nama" required maxlength="100"></div>
+  <div class="field"><label for="kelas">Kelas</label><input id="kelas" name="kelas" placeholder="Contoh: 3 I'dad" required maxlength="50"></div>
+  <div class="field"><label for="bidang">Bidang</label><select id="bidang" name="bidang" required><option value="">Pilih bidang</option></select></div>
+  <div class="field"><label for="jam">Sampai jam berapa?</label><input id="jam" name="jam" type="time" required></div>
+  <div class="field full"><label for="keperluan">Keperluan</label><input id="keperluan" name="keperluan" placeholder="Jelaskan keperluan" required maxlength="250"></div>
+  <div class="actions"><button class="primary" id="saveBtn" type="submit">Simpan Kehadiran</button><button class="secondary" type="button" id="cancelBtn" hidden>Batal edit</button><button class="secondary" type="reset">Kosongkan form</button></div>
+ </form>
+</section>
+<section class="panel">
+ <div class="panel-head"><div><h2>Daftar Kehadiran</h2><div class="sub">Cari, periksa, atau kelola data yang sudah masuk.</div></div></div>
+ <div class="toolbar"><input id="search" placeholder="Cari nama, kelas, atau keperluan…"><select id="filterBidang"><option value="">Semua bidang</option></select><button class="secondary" id="exportBtn" type="button">Unduh CSV</button></div>
+ <div class="table-wrap"><table><thead><tr><th>No.</th><th>Nama</th><th>Kelas</th><th>Bidang</th><th>Keperluan</th><th>Sampai</th><th>Waktu input</th><th>Aksi</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="empty">Belum ada data kehadiran. Silakan tambahkan melalui form di atas.</div></div>
+</section>
+<div class="footer">OSMIAS · Data disimpan di browser perangkat ini.</div>
+</main>
+<script>
+const bidangList=['BPH','KEAMANAN','RIYADHOH','TARBIYAH','LUGHOH','IT','NADZOFAH','SHIHAH','IBADAH','MATBAKH'];
+const $=id=>document.getElementById(id);
+bidangList.forEach(b=>{ $('bidang').add(new Option(b,b)); $('filterBidang').add(new Option(b,b)); });
+let data=[];try{data=JSON.parse(localStorage.getItem('osmiasAttendance')||'[]');if(!Array.isArray(data))data=[];}catch(e){data=[]}
+let editingId=null;
+const today=()=>new Date().toLocaleDateString('sv-SE');
+function saveLocal(){try{localStorage.setItem('osmiasAttendance',JSON.stringify(data));}catch(e){alert('Penyimpanan browser penuh atau tidak tersedia. Silakan ekspor CSV agar data tidak hilang.');}}
+function render(){
+ const q=$('search').value.trim().toLowerCase(),f=$('filterBidang').value;
+ const filtered=data.filter(d=>(!f||d.bidang===f)&&[d.nama,d.kelas,d.bidang,d.keperluan].some(v=>String(v).toLowerCase().includes(q)));
+ $('rows').innerHTML='';$('empty').style.display=filtered.length?'none':'block';
+ filtered.forEach((d,i)=>{const tr=document.createElement('tr');const vals=[i+1,d.nama,d.kelas,d.bidang,d.keperluan,d.jam,d.createdLabel||'—'];
+ vals.forEach((v,j)=>{const td=document.createElement('td');if(j===3){const span=document.createElement('span');span.className='pill';span.textContent=v;td.append(span)}else td.textContent=v;tr.append(td)});
+ const td=document.createElement('td'),wrap=document.createElement('div');wrap.className='row-actions';
+ const edit=document.createElement('button');edit.className='secondary small';edit.textContent='Edit';edit.onclick=()=>startEdit(d.id);
+ const del=document.createElement('button');del.className='danger small';del.textContent='Hapus';del.onclick=()=>removeItem(d.id);
+ wrap.append(edit,del);td.append(wrap);tr.append(td);$('rows').append(tr);
+ });
+ $('total').textContent=data.length;$('todayCount').textContent=data.filter(d=>d.date===today()).length;
+}
+$('attendanceForm').addEventListener('submit',e=>{e.preventDefault();const item={nama:$('nama').value.trim(),kelas:$('kelas').value.trim(),bidang:$('bidang').value,jam:$('jam').value,keperluan:$('keperluan').value.trim()};
+ if(!item.nama||!item.kelas||!item.bidang||!item.jam||!item.keperluan)return;
+ if(editingId){const idx=data.findIndex(d=>d.id===editingId);if(idx>=0)data[idx]={...data[idx],...item};}
+ else{const now=new Date();data.unshift({...item,id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),date:today(),createdLabel:now.toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'})});}
+ saveLocal();resetForm();render();
+});
+function startEdit(id){const d=data.find(x=>x.id===id);if(!d)return;editingId=id;['nama','kelas','bidang','jam','keperluan'].forEach(k=>$(k).value=d[k]);$('formTitle').textContent='✎ Edit Kehadiran';$('saveBtn').textContent='Simpan Perubahan';$('cancelBtn').hidden=false;$('nama').focus();window.scrollTo({top:0,behavior:'smooth'});}
+function resetForm(){$('attendanceForm').reset();editingId=null;$('formTitle').textContent='＋ Tambah Kehadiran';$('saveBtn').textContent='Simpan Kehadiran';$('cancelBtn').hidden=true;}
+function removeItem(id){if(!confirm('Yakin ingin menghapus data kehadiran ini?'))return;data=data.filter(d=>d.id!==id);saveLocal();if(editingId===id)resetForm();render();}
+$('cancelBtn').onclick=resetForm;$('search').addEventListener('input',render);$('filterBidang').addEventListener('change',render);
+$('exportBtn').onclick=()=>{if(!data.length){alert('Belum ada data untuk diunduh.');return;}const cols=['nama','kelas','bidang','keperluan','jam','createdLabel'];const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv=[['Nama','Kelas','Bidang','Keperluan','Sampai jam','Waktu input'].map(quote).join(','),...data.map(d=>cols.map(k=>quote(d[k])).join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='data-kehadiran-osmias.csv';a.click();URL.revokeObjectURL(url);};
+render();
+</script>
+</body>
+</html>
